@@ -4,11 +4,11 @@ import os.path
 import re
 
 
-from xml.etree import ElementTree
 
-#from xml.etree import ElementTree # part of python distribution
-#from elementtree import SimpleXMLTreeBuilder # part of your codebase
-#ElementTree.XMLTreeBuilder = SimpleXMLTreeBuilder.TreeBuilder
+
+from xml.etree import ElementTree # part of python distribution
+from elementtree import SimpleXMLTreeBuilder # part of your codebase
+ElementTree.XMLTreeBuilder = SimpleXMLTreeBuilder.TreeBuilder
 
 class TemplateNinjaNewFileCommand(sublime_plugin.WindowCommand):
 	plugin_name = 'TemplateNinja'
@@ -156,8 +156,7 @@ class TemplateNinjaNewFileCommand(sublime_plugin.WindowCommand):
 			if f == self.selected_path:
 				continue
 
-			# TODO: Can't figure out how to import ParseError
-			try:
+			try:			
 				template = ElementTree.parse(open(f))
 
 				node = template.find("extensions")
@@ -168,7 +167,8 @@ class TemplateNinjaNewFileCommand(sublime_plugin.WindowCommand):
 				if extension in extensions:
 					content = template.find("content").text
 					templates.append(template)
-			except:
+			
+			except ElementTree.ParseError:
 				self.output("Failed to parse: " + f)
 				continue
 
